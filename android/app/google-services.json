@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "870839127178",
+    "firebase_url": "https://covostats.firebaseio.com",
+    "project_id": "covostats",
+    "storage_bucket": "covostats.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:870839127178:android:c683c5dcd2051b20723173",
+        "android_client_info": {
+          "package_name": "com.example.covostats"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "870839127178-b4peb92lf4g9egd6o4fmq550gmhi5sp1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.covostats",
+            "certificate_hash": "b64b610e0a82f1aff77f9e1aa158219f7b7c11ea"
+          }
+        },
+        {
+          "client_id": "870839127178-u1ce8b59q5avitumf1so1fqltlgv67n8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0pWABY6llG-paWx3VzMD_g7ez6S--HS4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "870839127178-u1ce8b59q5avitumf1so1fqltlgv67n8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
