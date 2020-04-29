@@ -3,13 +3,11 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:covid19/data/hive.dart';
 import 'package:covid19/main.dart';
 import 'package:covid19/screens/contributePage.dart';
+import 'package:covid19/screens/faqPage.dart';
 import 'package:covid19/screens/loginPage.dart';
 import 'package:covid19/screens/myAccountPage.dart';
 import 'package:covid19/services/authProvider.dart';
 import 'package:covid19/services/provider.dart';
-import 'package:getflutter/components/avatar/gf_avatar.dart';
-import 'package:getflutter/components/drawer/gf_drawer.dart';
-import 'package:getflutter/components/drawer/gf_drawer_header.dart';
 import 'package:slide_popup_dialog/slide_popup_dialog.dart' as slideDialog;
 import 'package:covid19/api/fetch.dart';
 import 'package:covid19/data/global.dart';
@@ -35,7 +33,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     getData();
-   initHive();
+    initHive();
     // TODO: implement initState
     super.initState();
   }
@@ -120,7 +118,7 @@ class _HomePageState extends State<HomePage> {
           )
         : SafeArea(
             child: Scaffold(
-              drawer: drawer(context),
+              drawer: drawer(),
               floatingActionButton: FloatingActionButton(
                 onPressed: () async {
                   setState(() {
@@ -193,7 +191,7 @@ class _HomePageState extends State<HomePage> {
           );
   }
 
-  drawer(BuildContext context) {
+  drawer() {
     return FutureBuilder(
         future: Provider.of(context).auth.getCurrentUser(),
         builder: (context, snapshot) {
@@ -204,63 +202,77 @@ class _HomePageState extends State<HomePage> {
             String name = user.displayName;
             String email = user.email;
             String photoUrl = user.photoUrl;
-            
-            return GFDrawer(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+            return Drawer(
+              child: ListView(
                 children: <Widget>[
-                  GFDrawerHeader(
-                    currentAccountPicture: GFAvatar(
-                      radius: 80.0,
-                      backgroundImage: NetworkImage(photoUrl),
+                  UserAccountsDrawerHeader(
+                    decoration: BoxDecoration(
+                      color: Colors.black,
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(name),
-                        Text(email),
-                      ],
+                    accountName: Text(
+                      name,
+                    ),
+                    accountEmail: Text(
+                      email,
+                    ),
+                    currentAccountPicture: CircleAvatar(
+                      radius: 50.0,
+                      backgroundImage: NetworkImage(
+                        photoUrl,
+                      ),
                     ),
                   ),
                   ListTile(
+                    leading: Icon(Icons.home),
                     title: Text('Homepage'),
                     onTap: () => Navigator.pop(context),
                   ),
                   Divider(),
                   ListTile(
-                      title: Text('Graphical Data'),
-                      onTap: () => Navigator.push(
+                    leading: Icon(Icons.insert_chart),
+                    title: Text('Graphical Data'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => BarChartSample1()))),
-                  Divider(),
-                  ListTile(
-                    title: Text('Contribute'),
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ContributePage(),
-                      ),
-                    ),
+                              builder: (context) => BarChartSample1()));
+                    },
                   ),
-//                  Divider(),
-//                  ListTile(
-//                    title: Text('My Account'),
-//                    onTap: () => Navigator.push(
-//                      context,
-//                      MaterialPageRoute(
-//                        builder: (context) => MyAccountPage(),
-//                      ),
-//                    ),
-//                  ),
                   Divider(),
                   ListTile(
+                    leading: Icon(Icons.monetization_on),
+                      title: Text('Contribute'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ContributePage(),
+                          ),
+                        );
+                      }),
+                  Divider(),
+                  ListTile(
+                    leading: Icon(Icons.info_outline),
+                      title: Text('FAQs'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FAQPage(),
+                          ),
+                        );
+                      }),
+                  Divider(),
+                  ListTile(
+                    leading: Icon(Icons.exit_to_app),
                     onTap: () async {
-                      await Provider.of(context).auth.signOut();
                       Navigator.of(context).pop();
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (context) => LoginPage()));
+                      await Provider.of(context).auth.signOut();
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => LoginPage()));
                     },
                     title: Text(
                       'Sign out',

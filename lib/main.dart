@@ -1,3 +1,4 @@
+import 'package:covid19/data/global.dart';
 import 'package:covid19/screens/homePage.dart';
 import 'package:covid19/screens/loginPage.dart';
 import 'package:covid19/services/authProvider.dart';
@@ -46,7 +47,7 @@ class HomeController extends StatelessWidget {
         builder: (context, AsyncSnapshot<String> snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
             final bool signedIn = snapshot.hasData;
-            return signedIn ? HomePage() : LoginPage();
+            return signedIn ? HomePage(): LoginPage();
           }
           return Container(
               height: MediaQuery.of(context).size.height,

@@ -138,10 +138,7 @@ class LoadingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Center(child: CircularProgressIndicator()));
+    return _buildLoading();
 //    return Column(
 //      mainAxisAlignment: MainAxisAlignment.center,
 //      children: <Widget>[
@@ -168,6 +165,31 @@ class LoadingScreen extends StatelessWidget {
 //    );
   }
 
+}
+Widget _buildLoading() {
+  return Scaffold(
+    appBar: AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0.0,
+    ),
+    backgroundColor: Colors.black,
+    body: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          ),
+          SizedBox(height: 24),
+          Text(
+            'Fetching latest updates',
+            style: TextStyle(fontSize: 14, color: Colors.white),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 var appBar = AppBar(
