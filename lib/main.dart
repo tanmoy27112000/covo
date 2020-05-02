@@ -21,19 +21,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      return Provider(
-        auth: AuthProvider(),
-        child: OverlaySupport(
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              brightness: Brightness.dark,
-              fontFamily: 'Montserrat',
-            ),
-            title: 'Material App',
-            home: HomeController(),
+    return Provider(
+      auth: AuthProvider(),
+      child: OverlaySupport(
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            brightness: Brightness.dark,
+            fontFamily: 'Montserrat',
           ),
+          title: 'Material App',
+          home: HomeController(),
         ),
+      ),
     );
   }
 }
@@ -47,7 +47,7 @@ class HomeController extends StatelessWidget {
         builder: (context, AsyncSnapshot<String> snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
             final bool signedIn = snapshot.hasData;
-            return signedIn ? HomePage(): HomePage();
+            return signedIn ? HomePage() : LoginPage();
           }
           return Container(
               height: MediaQuery.of(context).size.height,
