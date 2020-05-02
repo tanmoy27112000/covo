@@ -5,14 +5,16 @@ import 'package:covid19/main.dart';
 import 'package:covid19/screens/contributePage.dart';
 import 'package:covid19/screens/faqPage.dart';
 import 'package:covid19/screens/loginPage.dart';
-import 'package:covid19/screens/myAccountPage.dart';
+import 'package:covid19/screens/symptomsPage.dart';
 import 'package:covid19/services/authProvider.dart';
 import 'package:covid19/services/provider.dart';
+import 'package:intl/intl.dart';
 import 'package:slide_popup_dialog/slide_popup_dialog.dart' as slideDialog;
 import 'package:covid19/api/fetch.dart';
 import 'package:covid19/data/global.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'indiaStatPage.dart';
 import 'searchPage.dart';
 import 'graphScreen.dart';
@@ -40,12 +42,13 @@ class _HomePageState extends State<HomePage> {
 
   void showDialogBox(var context) {
     TextEditingController textEditingController = TextEditingController();
+    textEditingController.text='';
     slideDialog.showSlideDialog(
       context: context,
       child: Column(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.all(14.0),
             child: Text(
               "Add Country data",
               style: TextStyle(
@@ -77,7 +80,16 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(16.0),
               child: InkWell(
                 onTap: () {
-                  searchData(title: textEditingController.text);
+                  if(textEditingController.text.trim()==''){
+                    showSimpleNotification(
+                        Text(
+                          "Country name field can't be empty.",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        background: Colors.orange);
+                  }
+                  else
+                    searchData(title: textEditingController.text.trim());
                 },
                 child: Container(
                   height: screenHeight(context: context, devideBy: 20),
@@ -112,6 +124,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return isLoading
         ? Scaffold(
+      backgroundColor: Colors.black,
             body: Center(
               child: LoadingScreen(),
             ),
@@ -121,10 +134,12 @@ class _HomePageState extends State<HomePage> {
               drawer: drawer(),
               floatingActionButton: FloatingActionButton(
                 onPressed: () async {
-                  setState(() {
-                    isLoading = true;
-                    getData();
-                  });
+                  if(this.mounted) {
+                    setState(() {
+                      isLoading = true;
+                      getData();
+                    });
+                  }
                 },
                 child: Icon(Icons.refresh),
               ),
@@ -180,10 +195,37 @@ class _HomePageState extends State<HomePage> {
                     ),
                     addButtonRowBuilder(context),
                     ...countryStatList,
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Text("Created by Tanmoy karmakar"),
-                    )
+                    GestureDetector(
+                      onTap: () {
+                        launch(
+                            'https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters');
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        color:Colors.black,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              'MYTH BUSTERS',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18),
+                            ),
+                            Icon(
+                              Icons.arrow_forward,
+                              color: Colors.white,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+//                    Padding(
+//                      padding: const EdgeInsets.all(20.0),
+//                      child: Text("Created by Tanmoy karmakar"),
+//                    )
                   ],
                 ),
               ),
@@ -249,6 +291,19 @@ class _HomePageState extends State<HomePage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => ContributePage(),
+                          ),
+                        );
+                      }),
+                  Divider(),
+                  ListTile(
+                      leading: Icon(Icons.help),
+                      title: Text('More Info'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => InfoScreen(),
                           ),
                         );
                       }),
@@ -328,7 +383,9 @@ class _HomePageState extends State<HomePage> {
             child: Container(
               width: screenWidth(context: context, devideBy: 3),
               child: Text(
-                "updated on: ${statReport["statistic_taken_at"]}",
+                "updated at:\n "+
+                    "${DateFormat('jm').format(DateTime.parse(statReport["statistic_taken_at"]))},"+
+                    "${DateFormat('yMMMd').format(DateTime.parse(statReport["statistic_taken_at"]))}",
               ),
             ),
           ),
@@ -339,7 +396,7 @@ class _HomePageState extends State<HomePage> {
                 IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () {
-                      countryStatList.clear();
+                      showDeleteAllDialogBox(context);
                       setState(() {});
                     }),
                 Padding(
@@ -386,9 +443,11 @@ class _HomePageState extends State<HomePage> {
       increaseCases = int.parse(temp) - await box.get("totalCases");
       print("increased Cases=$increaseCases");
       box.put("totalCases", int.parse(temp));
-      setState(() {
-        isLoading = false;
-      });
+      if(this.mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     } catch (e) {
       print(e.message);
       showSimpleNotification(
@@ -421,6 +480,43 @@ class _HomePageState extends State<HomePage> {
         break;
       }
     }
+  }
+  Future<Widget> showDeleteAllDialogBox(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Confirm Deletion'),
+        content: Text(countryStatList.length != 0
+            ? 'Are you sure you want to permanently remove all countries on watchlist?'
+            : 'Add a country to watchlist first.'),
+        actions: countryStatList.length!= 0
+            ? <Widget>[
+          RaisedButton(
+            onPressed: () {
+              setState(() {
+                countryStatList.clear();
+              });
+              Navigator.pop(context);
+            },
+            child: Text('Yes'),
+          ),
+          RaisedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('No'),
+          )
+        ]
+            : <Widget>[
+          RaisedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 }
 

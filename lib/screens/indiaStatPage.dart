@@ -25,6 +25,7 @@ class _IndiaStatPageState extends State<IndiaStatPage> {
     var _scrollController;
     return isLoading
         ? Scaffold(
+      backgroundColor: Colors.black,
             body: Center(
               child: LoadingScreen(),
             ),

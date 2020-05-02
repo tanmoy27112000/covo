@@ -32,6 +32,7 @@ class BarChartSample1State extends State<BarChartSample1> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.black,
         appBar: AppBar(
           centerTitle: true,
           elevation: 0,

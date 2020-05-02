@@ -1,6 +1,5 @@
 import 'package:covid19/data/global.dart';
 import 'package:covid19/screens/homePage.dart';
-import 'package:covid19/screens/userInfoPage.dart';
 import 'package:covid19/services/provider.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -15,7 +14,7 @@ class LoginPage extends StatefulWidget {
 
 var kBackgroundImage = BoxDecoration(
   image: DecorationImage(
-    image: AssetImage("assets/bg.jpg"),
+    image: AssetImage("assets/corona_bg.jpg"),
     fit: BoxFit.cover,
   ),
 );
@@ -74,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     child: SizedBox(
                       height: 10,
-                      width: 20,
+                      width: 500,
                       child: Divider(
                         color: Colors.white,
                       ),
@@ -154,7 +153,7 @@ class _LoginPageState extends State<LoginPage> {
                               bool isNewUser=await auth.loginWithGoogle();
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
-                                      builder: (context) => isNewUser?UserInfoPage():HomePage()));
+                                      builder: (context) => HomePage()));
                             } catch (e) {
                               print(e.message);
                             }
