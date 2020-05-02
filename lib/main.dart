@@ -47,7 +47,7 @@ class HomeController extends StatelessWidget {
         builder: (context, AsyncSnapshot<String> snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
             final bool signedIn = snapshot.hasData;
-            return signedIn ? HomePage(): LoginPage();
+            return signedIn ? HomePage(): HomePage();
           }
           return Container(
               height: MediaQuery.of(context).size.height,

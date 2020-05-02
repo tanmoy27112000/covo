@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
 
   void showDialogBox(var context) {
     TextEditingController textEditingController = TextEditingController();
-    textEditingController.text='';
+    textEditingController.text = '';
     slideDialog.showSlideDialog(
       context: context,
       child: Column(
@@ -80,15 +80,14 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(16.0),
               child: InkWell(
                 onTap: () {
-                  if(textEditingController.text.trim()==''){
+                  if (textEditingController.text.trim() == '') {
                     showSimpleNotification(
                         Text(
                           "Country name field can't be empty.",
                           style: TextStyle(color: Colors.white),
                         ),
                         background: Colors.orange);
-                  }
-                  else
+                  } else
                     searchData(title: textEditingController.text.trim());
                 },
                 child: Container(
@@ -124,7 +123,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return isLoading
         ? Scaffold(
-      backgroundColor: Colors.black,
+            backgroundColor: Colors.black,
             body: Center(
               child: LoadingScreen(),
             ),
@@ -134,7 +133,7 @@ class _HomePageState extends State<HomePage> {
               drawer: drawer(),
               floatingActionButton: FloatingActionButton(
                 onPressed: () async {
-                  if(this.mounted) {
+                  if (this.mounted) {
                     setState(() {
                       isLoading = true;
                       getData();
@@ -201,9 +200,14 @@ class _HomePageState extends State<HomePage> {
                             'https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters');
                       },
                       child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                        color:Colors.black,
+                        padding:
+                            EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                        margin:
+                            EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
@@ -283,7 +287,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Divider(),
                   ListTile(
-                    leading: Icon(Icons.monetization_on),
+                      leading: Icon(Icons.monetization_on),
                       title: Text('Contribute'),
                       onTap: () {
                         Navigator.pop(context);
@@ -309,7 +313,7 @@ class _HomePageState extends State<HomePage> {
                       }),
                   Divider(),
                   ListTile(
-                    leading: Icon(Icons.info_outline),
+                      leading: Icon(Icons.info_outline),
                       title: Text('FAQs'),
                       onTap: () {
                         Navigator.pop(context);
@@ -380,12 +384,18 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Container(
-              width: screenWidth(context: context, devideBy: 3),
-              child: Text(
-                "updated at:\n "+
-                    "${DateFormat('jm').format(DateTime.parse(statReport["statistic_taken_at"]))},"+
-                    "${DateFormat('yMMMd').format(DateTime.parse(statReport["statistic_taken_at"]))}",
+            child: InkWell(
+              onTap: () {
+                // Navigator.push(context,
+                //     MaterialPageRoute(builder: (context) => ContributePage()));
+              },
+              child: Container(
+                width: screenWidth(context: context, devideBy: 3),
+                child: Text(
+                  "updated at:\n " +
+                      "${DateFormat('jm').format(DateTime.parse(statReport["statistic_taken_at"]))}," +
+                      "${DateFormat('yMMMd').format(DateTime.parse(statReport["statistic_taken_at"]))}",
+                ),
               ),
             ),
           ),
@@ -443,7 +453,7 @@ class _HomePageState extends State<HomePage> {
       increaseCases = int.parse(temp) - await box.get("totalCases");
       print("increased Cases=$increaseCases");
       box.put("totalCases", int.parse(temp));
-      if(this.mounted) {
+      if (this.mounted) {
         setState(() {
           isLoading = false;
         });
@@ -481,6 +491,7 @@ class _HomePageState extends State<HomePage> {
       }
     }
   }
+
   Future<Widget> showDeleteAllDialogBox(BuildContext context) {
     return showDialog(
       context: context,
@@ -489,32 +500,32 @@ class _HomePageState extends State<HomePage> {
         content: Text(countryStatList.length != 0
             ? 'Are you sure you want to permanently remove all countries on watchlist?'
             : 'Add a country to watchlist first.'),
-        actions: countryStatList.length!= 0
+        actions: countryStatList.length != 0
             ? <Widget>[
-          RaisedButton(
-            onPressed: () {
-              setState(() {
-                countryStatList.clear();
-              });
-              Navigator.pop(context);
-            },
-            child: Text('Yes'),
-          ),
-          RaisedButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text('No'),
-          )
-        ]
+                RaisedButton(
+                  onPressed: () {
+                    setState(() {
+                      countryStatList.clear();
+                    });
+                    Navigator.pop(context);
+                  },
+                  child: Text('Yes'),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('No'),
+                )
+              ]
             : <Widget>[
-          RaisedButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text('OK'),
-          ),
-        ],
+                RaisedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('OK'),
+                ),
+              ],
       ),
     );
   }
